@@ -52,10 +52,8 @@ public class oyuncu : MonoBehaviour
 
     void Hareket()
     {
-        float x = Input.GetAxis("Horizontal")*Time.deltaTime * 10;
-        float y = Input.GetAxis("Vertical")*Time.deltaTime * 10;
-
-        transform.Translate(x, 0, y);
+        transform.Translate(Vector3.forward * Time.deltaTime * Input.GetAxis("Vertical") * 20f);
+        transform.Translate(Vector3.right * Time.deltaTime * Input.GetAxis("Horizontal") * 20f);
     }
 
     void Zýpla()
