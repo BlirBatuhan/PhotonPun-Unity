@@ -44,8 +44,10 @@ public class oyuncu : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.forward, out hit))
             {
+                if (hit.collider.CompareTag("Dusman"))
+                {
                     hit.collider.GetComponent<PhotonView>().RPC("HasarAl", RpcTarget.All, 10);
-                
+                }
             }
         }
     }
