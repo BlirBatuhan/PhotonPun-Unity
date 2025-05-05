@@ -210,7 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55db1296d91c97e4abf94e4cbda5f0a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "sagl\u0131k": 0
+  "sagl\u0131k": 10
   Noktalar:
-  - {fileID: 598407122843677267, guid: 44a8f7b83fcd84545b6c5e2d0eccde9d, type: 3}
-  - {fileID: 754294491522609167, guid: fd153c229de10a44ab2c19b664cf3465, type: 3}
+  - {fileID: 754294491522609167, guid: 298e1dd64da158349aa8c50534040d74, type: 3}
+  - {fileID: 598407122843677267, guid: 14053ad1970ea6c47aaf33057b9e8ad7, type: 3}

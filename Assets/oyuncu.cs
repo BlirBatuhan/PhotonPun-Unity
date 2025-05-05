@@ -1,4 +1,6 @@
 using Photon.Pun;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class oyuncu : MonoBehaviour
@@ -6,6 +8,7 @@ public class oyuncu : MonoBehaviour
     PhotonView pw;
     public int saglýk;
     public GameObject[] Noktalar;
+    int hedefOyuncu;
     void Start()
     {
         pw = GetComponent<PhotonView>();
@@ -17,10 +20,14 @@ public class oyuncu : MonoBehaviour
         if(PhotonNetwork.IsMasterClient)
         {
             transform.position = Noktalar[0].transform.position;
+            GameObject.FindWithTag("Oyuncu1_isim").GetComponent<TextMeshProUGUI>().text = saglýk.ToString();
+            hedefOyuncu = 1;
         }
         else
         {
             transform.position = Noktalar[1 ].transform.position;
+            GameObject.FindWithTag("Oyuncu2_isim").GetComponent<TextMeshProUGUI>().text = saglýk.ToString();
+            hedefOyuncu = 0;
         }
        
     }
@@ -46,7 +53,7 @@ public class oyuncu : MonoBehaviour
             {
                 if (hit.collider.CompareTag("Dusman"))
                 {
-                    hit.collider.GetComponent<PhotonView>().RPC("HasarAl", RpcTarget.All, 10);
+                    hit.collider.GetComponent<PhotonView>().RPC("CanAzalt", RpcTarget.All, hedefOyuncu);
                 }
             }
         }
@@ -76,5 +83,19 @@ public class oyuncu : MonoBehaviour
             PhotonNetwork.Destroy(gameObject);
         }
        
+    }
+
+    void CanAzalt()
+    {
+        saglýk--;
+
+            GameObject.FindWithTag("SunucuYonetimi").GetComponent<sunucuyonetim>().SkoruGuncelle(hedefOyuncu, saglýk);
+    
+        if (saglýk <= 0)
+        {
+            //canvasta çýkarabilirisin
+            PhotonNetwork.Destroy(gameObject);
+        }
+
     }
 }

@@ -5,8 +5,13 @@ TagManager:
   serializedVersion: 3
   tags:
   - OyuncuBekleniyor
-  - Oyuncu_1
   - Oyuncu_2
+  - Oyuncu1_isim
+  - Oyuncu2_isim
+  - SunucuYonetimi
+  - Oyuncu_1
+  - KazanmaPaneli
+  - KazananKisi
   layers:
   - Default
   - TransparentFX
