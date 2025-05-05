@@ -39,12 +39,12 @@ public class oyuncu : MonoBehaviour
         {
             Hareket();
             Zýpla();
-            AtesEt();
+            
         }
         
     }
 
-    void AtesEt()
+   /* void AtesEt()
     {
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -57,7 +57,7 @@ public class oyuncu : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
     void Hareket()
     {
@@ -74,7 +74,7 @@ public class oyuncu : MonoBehaviour
     }
 
     [PunRPC]
-    void HasarAl(int darbegucu)
+    public void HasarAl(int darbegucu)
     {
         saglýk -= darbegucu;
         Debug.Log("Hasar aldým: " + saglýk);
@@ -91,11 +91,5 @@ public class oyuncu : MonoBehaviour
 
             GameObject.FindWithTag("SunucuYonetimi").GetComponent<sunucuyonetim>().SkoruGuncelle(hedefOyuncu, saglýk);
     
-        if (saglýk <= 0)
-        {
-            //canvasta çýkarabilirisin
-            PhotonNetwork.Destroy(gameObject);
-        }
-
     }
 }
