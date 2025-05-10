@@ -12,24 +12,24 @@ public class oyuncu : MonoBehaviour
     void Start()
     {
         pw = GetComponent<PhotonView>();
-        if(pw.IsMine)
+        if (pw.IsMine)
         {
             GetComponent<Renderer>().material.color = Color.yellow;
-        }
 
-        if(PhotonNetwork.IsMasterClient)
-        {
-            transform.position = Noktalar[0].transform.position;
-            GameObject.FindWithTag("Oyuncu1_isim").GetComponent<TextMeshProUGUI>().text = saglýk.ToString();
-            hedefOyuncu = 1;
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                transform.position = Noktalar[0].transform.position;
+                GameObject.FindWithTag("Oyuncu1_isim").GetComponent<TextMeshProUGUI>().text = saglýk.ToString();
+                hedefOyuncu = 1;
+            }
+            else
+            {
+                transform.position = Noktalar[1].transform.position;
+                GameObject.FindWithTag("Oyuncu2_isim").GetComponent<TextMeshProUGUI>().text = saglýk.ToString();
+                hedefOyuncu = 0;
+            }
         }
-        else
-        {
-            transform.position = Noktalar[1 ].transform.position;
-            GameObject.FindWithTag("Oyuncu2_isim").GetComponent<TextMeshProUGUI>().text = saglýk.ToString();
-            hedefOyuncu = 0;
-        }
-       
     }
 
     // Update is called once per frame

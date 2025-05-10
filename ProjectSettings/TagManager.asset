@@ -12,6 +12,7 @@ TagManager:
   - Oyuncu_1
   - KazanmaPaneli
   - KazananKisi
+  - Content
   layers:
   - Default
   - TransparentFX

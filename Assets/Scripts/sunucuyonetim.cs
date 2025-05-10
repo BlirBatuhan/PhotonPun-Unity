@@ -11,7 +11,6 @@ using Unity.VisualScripting;
 public class sunucuyonetim : MonoBehaviourPunCallbacks
 {
 
-
     public Text serverbilgi;
     public InputField kulad;
     public InputField odaadi;
@@ -85,6 +84,11 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     {
         Debug.Log("Lobiden çıkıldı");
 
+    }
+
+    public void JoinRoomInList(string OdaAdı)
+    {
+        PhotonNetwork.JoinRoom(OdaAdı);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -178,9 +182,5 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
             }
         }
     }
-    void Update()
-    {
 
-
-    }
 }
