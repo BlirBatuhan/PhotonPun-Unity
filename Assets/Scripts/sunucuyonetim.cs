@@ -36,41 +36,43 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     }
     public void OdaKur()
     {
-        SceneManager.LoadScene(1);
         Kullanıcıadi = kulad.text;
         OdaAdi = odaadi.text;
         PhotonNetwork.JoinLobby();
-
     }
     public void GirisYap()
     {
-        SceneManager.LoadScene(1);
         Kullanıcıadi = kulad.text;
         OdaAdi = odaadi.text;
         PhotonNetwork.JoinLobby();
-
     }
     public override void OnConnectedToMaster()
     {
         serverbilgi.text = "Servere Bağlandı";
+        PhotonNetwork.JoinLobby();
 
     }
     public override void OnJoinedLobby()
     {
-        if (Kullanıcıadi != "" && OdaAdi != "")
+        if (!string.IsNullOrEmpty(Kullanıcıadi) && !string.IsNullOrEmpty(OdaAdi))
         {
-            PhotonNetwork.JoinOrCreateRoom(OdaAdi, new RoomOptions { MaxPlayers = 2, IsOpen = true, IsVisible = true }, TypedLobby.Default);
-
+            StartCoroutine(OdaKurGecikmeli());
         }
         else
         {
             PhotonNetwork.JoinRandomRoom();
         }
+    }
 
+    IEnumerator OdaKurGecikmeli()
+    {
+        yield return new WaitForSeconds(5f); // 🟢 Diğer oyuncuların listeyi güncellemesi için zaman tanır
+        PhotonNetwork.JoinOrCreateRoom(OdaAdi, new RoomOptions { MaxPlayers = 2, IsOpen = true, IsVisible = true }, TypedLobby.Default);
     }
     public override void OnJoinedRoom()
     {
         InvokeRepeating("BilgiKontrolEt", 0, 1f);
+        SceneManager.LoadScene(1);
         GameObject objem = PhotonNetwork.Instantiate("Varlık", Vector3.zero, Quaternion.identity, 0, null);
         objem.GetComponent<PhotonView>().Owner.NickName = Kullanıcıadi;
 
