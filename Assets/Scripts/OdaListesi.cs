@@ -12,7 +12,7 @@ public class OdaListesi : MonoBehaviourPunCallbacks
         for (int i = 0; i < roomList.Count; i++)
         {
             Debug.Log(roomList[i].Name);
-           GameObject Room = Instantiate(Odaprefab,Vector3.zero,Quaternion.identity,GameObject.FindWithTag("Content").transform);
+            GameObject Room = Instantiate(Odaprefab,Vector3.zero,Quaternion.identity,GameObject.FindWithTag("Content").transform);
             Room.GetComponent<Oda>().Ýsim.text = roomList[i].Name;
         }
     }
