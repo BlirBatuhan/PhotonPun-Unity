@@ -16,6 +16,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     public InputField odaadi;
     string Kullanıcıadi;
     string OdaAdi;
+    bool odayaGirildimi = false;
 
 
 
@@ -39,6 +40,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(1);
         Kullanıcıadi = kulad.text;
         OdaAdi = odaadi.text;
+        odayaGirildimi = true;
         PhotonNetwork.JoinLobby();
 
     }
@@ -47,25 +49,32 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(1);
         Kullanıcıadi = kulad.text;
         OdaAdi = odaadi.text;
+        odayaGirildimi=true;
         PhotonNetwork.JoinLobby();
 
     }
     public override void OnConnectedToMaster()
     {
         serverbilgi.text = "Servere Bağlandı";
+        PhotonNetwork.JoinLobby();
 
     }
     public override void OnJoinedLobby()
     {
-        if (Kullanıcıadi != "" && OdaAdi != "")
+        if (odayaGirildimi)
         {
-            PhotonNetwork.JoinOrCreateRoom(OdaAdi, new RoomOptions { MaxPlayers = 2, IsOpen = true, IsVisible = true }, TypedLobby.Default);
+            if (Kullanıcıadi != "" && OdaAdi != "")
+            {
+                PhotonNetwork.JoinOrCreateRoom(OdaAdi, new RoomOptions { MaxPlayers = 2, IsOpen = true, IsVisible = true }, TypedLobby.Default);
 
+            }
+            else
+            {
+                PhotonNetwork.JoinRandomRoom();
+            }
         }
         else
-        {
-            PhotonNetwork.JoinRandomRoom();
-        }
+        { return;}
 
     }
     public override void OnJoinedRoom()
@@ -88,7 +97,9 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
 
     public void JoinRoomInList(string OdaAdı)
     {
-        PhotonNetwork.JoinRoom(OdaAdı);
+        Kullanıcıadi = kulad.text;
+        PhotonNetwork.JoinOrCreateRoom(OdaAdı, new RoomOptions { MaxPlayers = 2, IsOpen = true, IsVisible = true }, TypedLobby.Default);
+        SceneManager.LoadScene(1);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
