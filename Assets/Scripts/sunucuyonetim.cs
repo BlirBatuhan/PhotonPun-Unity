@@ -57,7 +57,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedLobby()
     {
-<<<<<<< HEAD
+
         if (odayaGirildimi)
         {
             if (Kullanıcıadi != "" && OdaAdi != "")
@@ -72,7 +72,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
         }
         else
         { return;}
-=======
+
         if (!string.IsNullOrEmpty(Kullanıcıadi) && !string.IsNullOrEmpty(OdaAdi))
         {
             StartCoroutine(OdaKurGecikmeli());
@@ -82,7 +82,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
             PhotonNetwork.JoinRandomRoom();
         }
     }
->>>>>>> 5ea3b526a863306a9ba5831235f4664cccee405e
+
 
     IEnumerator OdaKurGecikmeli()
     {
