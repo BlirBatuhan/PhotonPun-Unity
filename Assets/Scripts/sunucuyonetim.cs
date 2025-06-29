@@ -17,6 +17,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     string Kullanıcıadi;
     string OdaAdi;
     bool odayaGirildimi = false;
+    bool hasInstatiated = false;
 
 
 
@@ -57,24 +58,14 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedLobby()
     {
+        if (!odayaGirildimi)
+            return;
 
-        if (odayaGirildimi)
+        bool bilgilerGecerli = !string.IsNullOrEmpty(Kullanıcıadi) && !string.IsNullOrEmpty(OdaAdi);
+
+        if (bilgilerGecerli)
         {
-            if (Kullanıcıadi != "" && OdaAdi != "")
-            {
-                PhotonNetwork.JoinOrCreateRoom(OdaAdi, new RoomOptions { MaxPlayers = 2, IsOpen = true, IsVisible = true }, TypedLobby.Default);
 
-            }
-            else
-            {
-                PhotonNetwork.JoinRandomRoom();
-            }
-        }
-        else
-        { return;}
-
-        if (!string.IsNullOrEmpty(Kullanıcıadi) && !string.IsNullOrEmpty(OdaAdi))
-        {
             StartCoroutine(OdaKurGecikmeli());
         }
         else
@@ -84,6 +75,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     }
 
 
+
     IEnumerator OdaKurGecikmeli()
     {
         yield return new WaitForSeconds(5f); // 🟢 Diğer oyuncuların listeyi güncellemesi için zaman tanır
@@ -91,12 +83,30 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        InvokeRepeating("BilgiKontrolEt", 0, 1f);
+        
         SceneManager.LoadScene(1);
-        GameObject objem = PhotonNetwork.Instantiate("Varlık", Vector3.zero, Quaternion.identity, 0, null);
-        objem.GetComponent<PhotonView>().Owner.NickName = Kullanıcıadi;
+
+        if (!hasInstatiated)
+        {
+            hasInstatiated = true;
+            StartCoroutine(InstantiateAfterSceneLoad());
+        }
 
     }
+
+    IEnumerator InstantiateAfterSceneLoad()
+    {
+        yield return new WaitForSeconds(0.5f);
+        GameObject objem = PhotonNetwork.Instantiate("Varlık", Vector3.zero, Quaternion.identity);
+
+        if (objem != null && objem.GetComponent<PhotonView>() != null)
+        {
+            objem.GetComponent<PhotonView>().Owner.NickName = Kullanıcıadi;
+            Debug.Log("NickName atandı: " + Kullanıcıadi);
+        }
+        InvokeRepeating("BilgiKontrolEt", 0, 1f);
+    }
+
     public override void OnLeftRoom()
     {
         Debug.Log("Odadan çıkıldı");

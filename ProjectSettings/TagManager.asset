@@ -4,7 +4,6 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - OyuncuBekleniyor
   - Oyuncu_2
   - Oyuncu1_isim
   - Oyuncu2_isim
@@ -13,6 +12,8 @@ TagManager:
   - KazanmaPaneli
   - KazananKisi
   - Content
+  - OyuncuBekleniyor
+  - event
   layers:
   - Default
   - TransparentFX

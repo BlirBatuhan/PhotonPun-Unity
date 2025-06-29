@@ -1,55 +1,33 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
+using Photon.Pun;
 
 public class Silah : MonoBehaviour
 {
     public Transform SilahCıkısNoktası;
     float AtesEtmeSikligi_1;
-    public float AtesEtmeSikligi_2 = .2f;
-    public float menzil;
-    int DarbeGucu = 20;
-    bool sesCalabilir = true;
-    [Header("SESLER")]
-    public AudioSource[] Sesler;
-    [Header("EFEKTLER")]
-    public ParticleSystem[] Efektler;
+    public float AtesEtmeSikligi_2 = 0.2f;
+
+    private PhotonView ownerPhotonView;
 
     void Start()
     {
-        AtesEtmeSikligi_1 = Time.time;
-
+        // Ana oyuncu objesindeki PhotonView bulunuyor
+        ownerPhotonView = GetComponentInParent<PhotonView>();
+        if (ownerPhotonView == null)
+            Debug.LogError("Parent objede PhotonView bulunamadı!");
     }
-
 
     void Update()
     {
+        if (!ownerPhotonView.IsMine)
+            return;
+
         if (Input.GetKey(KeyCode.Mouse0))
         {
             if (Time.time > AtesEtmeSikligi_1)
             {
-                AtesEt();
+                ownerPhotonView.RPC("RPC_AtesEt", RpcTarget.All, SilahCıkısNoktası.position, SilahCıkısNoktası.forward);
                 AtesEtmeSikligi_1 = Time.time + AtesEtmeSikligi_2;
-            }
-        }
-
-        void AtesEt()
-        {
-           
-            Sesler[0].Play();
-
-            RaycastHit hit;
-            if (Physics.Raycast(SilahCıkısNoktası.position, SilahCıkısNoktası.forward, out hit, menzil))
-            {
-                if (hit.transform.CompareTag("Player"))
-                {
-                    hit.transform.GetComponent<oyuncu>().HasarAl(DarbeGucu);
-                    Instantiate(Efektler[0], hit.point, Quaternion.LookRotation(hit.normal));
-
-                }
-                else
-                {
-                    Instantiate(Efektler[1], hit.point, Quaternion.LookRotation(hit.normal));
-                }
             }
         }
     }

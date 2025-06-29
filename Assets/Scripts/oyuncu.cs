@@ -1,95 +1,132 @@
 using Photon.Pun;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class oyuncu : MonoBehaviour
+public class oyuncu : MonoBehaviourPunCallbacks
 {
     PhotonView pw;
-    public int saglýk;
+    // Efekt çýkmasýný istemediðin layer'lar (örn. görünmez collider layer'ý)
+    public LayerMask ignoreLayers;
+    public float menzil;
+
+    [Header("SESLER")]
+    public AudioSource[] Sesler;
+
+    [Header("Karakter")]
+    public int saglik = 100;
+
+    [Header("Pozisyon Noktalari")]
     public GameObject[] Noktalar;
-    int hedefOyuncu;
+
+    [Header("Hareket")]
+    public CharacterController controller;
+    public float speed = 5f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 2f;
+
+    Vector3 velocity;
+    bool isGrounded;
+
+    // Silah etkisi için referans
+    public ParticleSystem[] Efektler;  // Efektleri oyuncuya baðlayabilirsin
+
+    public int DarbeGucu = 20;
+
     void Start()
     {
         pw = GetComponent<PhotonView>();
+
         if (pw.IsMine)
         {
-            GetComponent<Renderer>().material.color = Color.yellow;
-
-
             if (PhotonNetwork.IsMasterClient)
             {
                 transform.position = Noktalar[0].transform.position;
-                GameObject.FindWithTag("Oyuncu1_isim").GetComponent<TextMeshProUGUI>().text = saglýk.ToString();
-                hedefOyuncu = 1;
             }
             else
             {
                 transform.position = Noktalar[1].transform.position;
-                GameObject.FindWithTag("Oyuncu2_isim").GetComponent<TextMeshProUGUI>().text = saglýk.ToString();
-                hedefOyuncu = 0;
             }
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (pw.IsMine)
-        {
-            Hareket();
-            Zýpla();
-            
-        }
-        
-    }
+        if (!pw.IsMine) return;
 
-   /* void AtesEt()
-    {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit))
-            {
-                if (hit.collider.CompareTag("Dusman"))
-                {
-                    hit.collider.GetComponent<PhotonView>().RPC("CanAzalt", RpcTarget.All, hedefOyuncu);
-                }
-            }
-        }
-    }*/
+        Hareket();
+        Ziplama();
+    }
 
     void Hareket()
     {
-        transform.Translate(Vector3.forward * Time.deltaTime * Input.GetAxis("Vertical") * 20f);
-        transform.Translate(Vector3.right * Time.deltaTime * Input.GetAxis("Horizontal") * 20f);
+        float x = Input.GetAxisRaw("Horizontal");
+        float z = Input.GetAxisRaw("Vertical");
+
+        Vector3 move = transform.right * x + transform.forward * z;
+        controller.Move(move.normalized * speed * Time.deltaTime);
     }
 
-    void Zýpla()
-    { 
-        if (Input.GetKeyDown(KeyCode.Space))
+    void Ziplama()
+    {
+        if (controller.isGrounded && velocity.y < 0)
         {
-            GetComponent<Rigidbody>().AddForce(Vector3.up * 5, ForceMode.Impulse);
+            velocity.y = -2f;
+        }
+
+        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+
+        controller.Move(velocity * Time.deltaTime);
+    }
+
+    [PunRPC]
+    public void HasarAl(int darbeGucu)
+    {
+        saglik -= darbeGucu;
+        Debug.Log("Hasar aldým: " + saglik);
+
+        if (saglik <= 0)
+        {
+            if (pw.IsMine)
+                PhotonNetwork.Destroy(gameObject);
         }
     }
 
     [PunRPC]
-    public void HasarAl(int darbegucu)
+    void RPC_AtesEt(Vector3 rayOrigin, Vector3 rayDirection)
     {
-        saglýk -= darbegucu;
-        Debug.Log("Hasar aldým: " + saglýk);
-        if (saglýk <= 0)
+        // Ses çal
+        Sesler[0].Play();
+
+        // RaycastAll ile tüm çarpýþmalarý alýyoruz
+        RaycastHit[] hits = Physics.RaycastAll(rayOrigin, rayDirection, menzil);
+
+        foreach (var hit in hits)
         {
-            PhotonNetwork.Destroy(gameObject);
+            // Eðer obje, ignoreLayers içindeyse devam et, efekt verme
+            if (((1 << hit.collider.gameObject.layer) & ignoreLayers) != 0)
+                continue;
+
+            if (hit.transform.CompareTag("Player"))
+            {
+                if (hit.transform.GetComponent<PhotonView>().IsMine)
+                {
+                    hit.transform.GetComponent<oyuncu>().HasarAl(DarbeGucu);
+                }
+
+                Instantiate(Efektler[0], hit.point, Quaternion.LookRotation(hit.normal));
+            }
+            else
+            {
+                Instantiate(Efektler[1], hit.point, Quaternion.LookRotation(hit.normal));
+            }
+
+            // Ýlk gerçek objede durmak istiyorsan buraya break koyabilirsin
+            break;
         }
-       
-    }
-
-    void CanAzalt()
-    {
-        saglýk--;
-
-            GameObject.FindWithTag("SunucuYonetimi").GetComponent<sunucuyonetim>().SkoruGuncelle(hedefOyuncu, saglýk);
-    
     }
 }
