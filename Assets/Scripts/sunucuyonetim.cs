@@ -47,7 +47,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     {
         Kullanıcıadi = kulad.text;
         OdaAdi = odaadi.text;
-        odayaGirildimi=true;
+        odayaGirildimi = true;
         PhotonNetwork.JoinLobby();
     }
     public override void OnConnectedToMaster()
@@ -83,7 +83,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        
+
         SceneManager.LoadScene(1);
 
         if (!hasInstatiated)
@@ -91,7 +91,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
             hasInstatiated = true;
             StartCoroutine(InstantiateAfterSceneLoad());
         }
-
+        
     }
 
     IEnumerator InstantiateAfterSceneLoad()
@@ -103,6 +103,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
         {
             objem.GetComponent<PhotonView>().Owner.NickName = Kullanıcıadi;
             Debug.Log("NickName atandı: " + Kullanıcıadi);
+            Debug.Log("Oyuncu sayısı: " + GameObject.FindGameObjectsWithTag("Player").Length);
         }
         InvokeRepeating("BilgiKontrolEt", 0, 1f);
     }
@@ -122,7 +123,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
     {
         Kullanıcıadi = kulad.text;
         PhotonNetwork.JoinOrCreateRoom(OdaAdı, new RoomOptions { MaxPlayers = 2, IsOpen = true, IsVisible = true }, TypedLobby.Default);
-        SceneManager.LoadScene(1);
+        
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -172,7 +173,7 @@ public class sunucuyonetim : MonoBehaviourPunCallbacks
 
         }
 
-
+        
     }
 
 

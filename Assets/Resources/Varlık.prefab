@@ -295,7 +295,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 5900543453609566795}
@@ -346,7 +346,7 @@ MonoBehaviour:
   jumpHeight: 2
   Efektler:
   - {fileID: 198000011254678926, guid: abb9f519b142e304d9c45b56afa768bc, type: 3}
-  - {fileID: 198000012529019072, guid: 4edabb1c0dde62743b137378c7d22980, type: 3}
+  - {fileID: 198000013597187216, guid: 83e55d3418297934fab882559d009285, type: 3}
   DarbeGucu: 20
 --- !u!136 &7153795107332399462
 CapsuleCollider:
@@ -395,7 +395,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.95, z: 0}
+  m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!54 &6056990464456341962
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -444,7 +444,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0.91217184
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0

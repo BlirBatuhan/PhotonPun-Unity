@@ -46,13 +46,17 @@ public class oyuncu : MonoBehaviourPunCallbacks
             {
                 transform.position = Noktalar[1].transform.position;
             }
+            Debug.Log($"Benim karakterim spawn edildi: {PhotonNetwork.LocalPlayer.NickName}");
+        }
+        else
+        {
+            Debug.Log($"Baþka oyuncunun karakteri görüldü: {pw.Owner.NickName}");
         }
     }
 
     void Update()
     {
         if (!pw.IsMine) return;
-
         Hareket();
         Ziplama();
     }
